@@ -1,0 +1,8 @@
+name;author;isbn;year;available
+Harry Potter;Rowlings;11221133;2010;True
+Pan Prstenov;Tolkien;11223344;2003;True
+Patriot Games;Tom Clancy;33221133;1987;True
+Chromosome 6;Robin Cook;22113344;1992;True
+The Client;John Grisham;22443311;1993;True
+Stained White Radiance;James Lee Burke;33113311;1992;True
+Jungle;Clive Cussler;44332211;2011;True
