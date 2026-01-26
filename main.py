@@ -214,3 +214,5 @@ while True:
             way = "kniznica.txt"
         save_to_file(library, way)
         input("\npokracuj enterom..")
+    elif choice == "0":
+        break
