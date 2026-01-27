@@ -1,13 +1,10 @@
 class Book:
     def __init__(self, name, author, isbn, year, available=True):
-        self.attributes(name, author, isbn, year, available)
-    def attributes(self, name, author, isbn, year, available):
         self.name = str(name)
         self.author = str(author)
-        self.isbn = int(isbn)
+        self.isbn = str(isbn)
         self.year = int(year)
         self.available = bool(available)
-        return self
     def lend(self):
         if self.available:
             self.available = False
@@ -32,13 +29,11 @@ class Library:
         name = str(name).lower()
         return [b for b in self.books if name in b.name.lower()]
     def lend(self, isbn):
-        isbn = int(isbn)
         for b in self.books:
             if b.isbn == isbn:
                 return b.lend()
         return False
     def returning(self, isbn):
-        isbn = int(isbn)
         for b in self.books:
             if b.isbn == isbn:
                 b.returning()
@@ -132,9 +127,9 @@ def load_from_file(library, path="kniznica.txt"):
             continue
         name, author, isbn_s, year_s, avail_s = [p.strip() for p in parts]
         try:
-            isbn = int(isbn_s)
+            isbn = str(isbn_s)
             year = int(year_s)
-            available = str(avail_s).strip().lower() in ("true", "1", "ano", "y", "yes")
+            available = str(avail_s).strip().lower() in ("true", "1", "a", "ano", "áno", "y", "yes")
         except ValueError:
             fault += 1
             continue
@@ -147,33 +142,35 @@ def load_from_file(library, path="kniznica.txt"):
     print(f"pridane: {plus}, duplicitne ISBN: {jump}, chybne riadky: {fault}")
     return plus
 
+def wait_enter():
+    input("\npokracujte stlacenim enter...")
 while True:
     show_menu()
     choice = input("zvol moznost: ").strip()
     if choice == "1":
         print("\ndostupne knihy:")
         library.showme()
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "2":
         q = input("zadaj cast nazvu knihy: ").strip()
         results = library.search(q)
         print_books(results, "hladanie podla nazvu knihy: ")
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "3":
         q = input("zadaj cast mena autora: ").strip()
         results = search_by_author(library, q)
         print_books(results, "hladanie podla mena autora: ")
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "4":
-        isbn = input_int("zadaj isbn: ")
+        isbn = input("zadaj isbn: ").strip()
         results = search_by_isbn(library, isbn)
-        print_books(results, "hladanie podlaISBN: ")
-        print("\npokracujte stlacenim enter...")
+        print_books(results, "hladanie podla ISBN: ")
+        wait_enter()
     elif choice == "5":
         print("\npridanie novej knihy")
-        name = input("nazom knihy: ").strip()
+        name = input("nazov knihy: ").strip()
         author = input("meno autora: ").strip()
-        isbn = input_int("ISBN cislo: ")
+        isbn = input("ISBN: ").strip()
         year = input_int("rok vydania: ")
         avail = input("je dostupna? (enter = ano / n = nie").strip().lower()
         available = False if avail in ("n", "nie", "no") else True
@@ -182,37 +179,37 @@ while True:
             print("kniha bola pridana")
         else:
             print("knihu sa nepodarilo pridat / ISBN uz existuje")
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "6":
-        isbn = input_int("zadaj ISBN knihy na vypozicanie: ")
+        isbn = input("zadaj ISBN knihy na vypozicanie: ").strip()
         looked=next((b for b in library.books if b.isbn == isbn), None)
-        if not looked:
+        if looked is None:
             print("kniha s danym ISBN sa nenasla")
         else:
             if library.lend(isbn):
                 print("kniha bola vypozicana")
             else:
                 print("kniha je uz vypozicana")
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "7":
-        isbn = input_int("zadaj ISBN knihy na vratenie: ")
+        isbn = input("zadaj ISBN knihy na vratenie: ").strip()
         returned = library.returning(isbn)
         if returned:
             print(f"vratene: {returned.name}")
         else:
             print("kniha s danym ISBN sa nenasla")
-        print("\npokracujte stlacenim enter...")
+        wait_enter()
     elif choice == "8":
         way = input("zadaj cestu k suboru (enter=kniznica.txt): ").strip()
         if not way:
             way = "kniznica.txt"
         load_from_file(library, way)
-        input("\npokracuj enterom..")
+        wait_enter()
     elif choice == "9":
         way = input("zadaj cielovy subor (enter=kniznica.txt): ").strip()
         if not way:
             way = "kniznica.txt"
         save_to_file(library, way)
-        input("\npokracuj enterom..")
+        wait_enter()
     elif choice == "0":
         break
